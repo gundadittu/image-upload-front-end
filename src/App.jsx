@@ -1,49 +1,95 @@
-import React from 'react';
-import { testFn } from './helpers'
+import React, { useState } from 'react';
+import { PageHeader, Button, Modal, message} from 'antd';
+import ImageUpload from './components/ImageUpload';
+import Login from './components/Login';
+import SubmissionGallery from './components/SubmissionGallery';
+import base64 from 'base-64';
+import { API_BASE_URL } from './constants';
 import './App.css';
+import 'antd/dist/antd.css';
 
-function App() {
+function App(props) {
+  const [auth, setAuth] = useState(null);
+  const [uploadImageModalVisible, setUploadImageModalVisible] = useState(false);
+  const [submissions, setSubmissions] = useState([]);
+
+  const signOut = () => {
+    setAuth(null);
+    setSubmissions([]);
+  }
+
+  const fetchUploadedImages = (showLoadingMessage=true) => {
+    let headers = new Headers();
+     headers.set(
+       'Authorization',
+       'Basic ' + base64.encode(auth.username + ":" + auth.password));
   
-  function submitForm(e) {
-    e.preventDefault();
-    testFn("testFn input")
-    const formData = new FormData(e.target);
+    const closeLoadingMessage = (showLoadingMessage) ? message.loading("Getting uploaded images...", 0) : function() { } ;
     
-    fetch('https://flask-test.gundadittu.repl.co/upload-face-image', {
-      method: 'post',
-      body: formData
+    fetch(API_BASE_URL+'/api/users/get-submissions', {
+      method: 'GET',
+      headers: headers
     })
-    .then((r) => r.json())
-    .then((json) => {
-      const message = `Success.`
-      alert(message);
+    .then(r => r.json())
+    .then(json => {
+      const error = json.error;
+      if (error != null) {
+        throw Error(json.message)
+      }
+      const submissions = json.submissions
+      setSubmissions(submissions)
+      closeLoadingMessage();
     })
     .catch((e) => {
-      console.error(e.message)
-      alert(e.message)
+      console.error(e.message);
+      closeLoadingMessage();
+      message.error(e.message);
     })
-  }
+  };
   
+  
+  if (auth == null) {
+    return (
+      <Login setAuth={setAuth}/>
+    );
+  }
   return (
-    <form onSubmit={submitForm}>
-       <input type="text" name="name" />
-      <br/>
-      <input type="file" name="faceImage" accept="image/png, image/jpeg"/>
-      <br/>
-      <input type="submit" value="Submit" />
-    </form>
+    <div>
+      <PageHeader
+        title={"Image Upload App"}
+        extra={[
+           <Button
+            key="1"
+            onClick={signOut}>
+           Sign out
+          </Button>,
+          <Button
+            key="2"
+            type="primary"
+            onClick={() => setUploadImageModalVisible(true)}>
+            Upload Image
+          </Button>
+        ]}
+      >
+        <p>{"Welcome, "+auth.username}</p>
+      </ PageHeader>
+      <Modal
+        visible={uploadImageModalVisible}
+        onCancel={() => setUploadImageModalVisible(false)}
+        centered={true}
+        footer={null}
+      >
+        <ImageUpload
+          closeUploadImageModal={() => setUploadImageModalVisible(false)}
+          fetchUploadedImages={fetchUploadedImages}
+          auth={auth} />
+      </Modal>
+      <SubmissionGallery
+        fetchUploadedImages={fetchUploadedImages}
+        submissions={submissions}
+        auth={auth}/>
+    </div>
   );
 }
 
-// TODO: look into jsx documentation for form
-// TODO: look into formdata object docs
-// TODO: how to add multiple files?
 export default App;
-
-// https://reactjs.org/docs/dom-elements.html
-// https://reactjs.org/docs/events.html'
-// https://reactjs.org/docs/uncontrolled-components.html
-// https://reactjs.org/docs/forms.html
-// https://reactjs.org/docs/jsx-in-depth.html
-// https://reactjs.org/docs/refs-and-the-dom.html
-// https://reactjs.org/docs/thinking-in-react.html
