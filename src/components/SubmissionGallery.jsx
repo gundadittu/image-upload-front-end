@@ -4,7 +4,7 @@ import { API_BASE_URL } from '../constants';
 
 function SubmissionGallery(props) {
   const truncateString = (str, n) => {
-    return ((str.length > n) ? str.substr(0, n-1) + '&hellip;' : str);
+    return ((str.length > n) ? str.substr(0, n-1)+'...' : str);
   };
   
   useEffect(() => {
@@ -33,7 +33,7 @@ function SubmissionGallery(props) {
       <>
         <Divider orientation="left">{truncateString(sub.title, 20)}</Divider>
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-          <Col className="gutter-row" span={12}>
+          <Col className="gutter-row" span={8}>
             <div style={imageDivStyle}>
               <Image
               style={imageStyle}
@@ -41,7 +41,15 @@ function SubmissionGallery(props) {
               <p>Original Image</p>
             </div>
           </Col>
-          <Col className="gutter-row" span={12}>
+          <Col className="gutter-row" span={8}>
+            <div style={imageDivStyle}>
+              <Image
+                style={imageStyle}
+                src={API_BASE_URL+sub.rotatedImagePath}/>
+              <p>Rotated Image</p>
+            </div>
+          </Col>
+          <Col className="gutter-row" span={8}>
             <div style={imageDivStyle}>
               <Image
                 style={imageStyle}
