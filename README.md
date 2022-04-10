@@ -3,9 +3,8 @@
 - Update ```API_BASE_URL``` in ```src/constants.js``` with the base url for the backend (e.g. http://127.0.0.1:5000)
 
 ## Start React app
-Run the commands below in the root directory
+Run the command below in the root directory
 ```bash
-npm run install
 npm run dev
 ```
 
