@@ -1,5 +1,5 @@
 ## Prereqs
-- Install Npm: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+- Install Node.js and Npm: https://nodejs.org/en/download
 - Update ```API_BASE_URL``` in ```src/constants.js``` with the base url for the backend (e.g. http://127.0.0.1:5000)
 
 ## Start React app
