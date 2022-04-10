@@ -10,8 +10,8 @@ import 'antd/dist/antd.css';
 
 function App(props) {
   const [auth, setAuth] = useState(null);
-  const [uploadImageModalVisible, setUploadImageModalVisible] = useState(false);
   const [submissions, setSubmissions] = useState([]);
+  const [isUploadImageModalVisible, setIsUploadImageModalVisible] = useState(false);
 
   const signOut = () => {
     setAuth(null);
@@ -20,11 +20,9 @@ function App(props) {
 
   const fetchUploadedImages = (showLoadingMessage=true) => {
     let headers = new Headers();
-     headers.set(
-       'Authorization',
-       'Basic ' + base64.encode(auth.username + ":" + auth.password));
+    headers.set('Authorization', 'Basic '+base64.encode(auth.username+":"+auth.password));
   
-    const closeLoadingMessage = (showLoadingMessage) ? message.loading("Getting uploaded images...", 0) : function() { } ;
+    const closeLoadingMessage = ((showLoadingMessage) ? message.loading("Getting uploaded images...", 0) : function() {});
     
     fetch(API_BASE_URL+'/api/users/get-submissions', {
       method: 'GET',
@@ -34,25 +32,25 @@ function App(props) {
     .then(json => {
       const error = json.error;
       if (error != null) {
-        throw Error(json.message)
+        throw Error(json.message);
       }
-      const submissions = json.submissions
-      setSubmissions(submissions)
+      const submissions = json.submissions;
+      setSubmissions(submissions);
       closeLoadingMessage();
     })
     .catch((e) => {
       console.error(e.message);
       closeLoadingMessage();
       message.error(e.message);
-    })
+    });
   };
-  
   
   if (auth == null) {
     return (
       <Login setAuth={setAuth}/>
     );
   }
+  
   return (
     <div>
       <PageHeader
@@ -60,13 +58,15 @@ function App(props) {
         extra={[
            <Button
             key="1"
-            onClick={signOut}>
+            onClick={signOut}
+          >
            Sign out
           </Button>,
           <Button
             key="2"
             type="primary"
-            onClick={() => setUploadImageModalVisible(true)}>
+            onClick={() => setIsUploadImageModalVisible(true)}
+          >
             Upload Image
           </Button>
         ]}
@@ -74,20 +74,22 @@ function App(props) {
         <p>{"Welcome, "+auth.username}</p>
       </ PageHeader>
       <Modal
-        visible={uploadImageModalVisible}
-        onCancel={() => setUploadImageModalVisible(false)}
+        visible={isUploadImageModalVisible}
+        onCancel={() => setIsUploadImageModalVisible(false)}
         centered={true}
         footer={null}
       >
         <ImageUpload
-          closeUploadImageModal={() => setUploadImageModalVisible(false)}
+          closeUploadImageModal={() => setIsUploadImageModalVisible(false)}
           fetchUploadedImages={fetchUploadedImages}
-          auth={auth} />
+          auth={auth} 
+        />
       </Modal>
       <SubmissionGallery
         fetchUploadedImages={fetchUploadedImages}
         submissions={submissions}
-        auth={auth}/>
+        auth={auth}
+      />
     </div>
   );
 }

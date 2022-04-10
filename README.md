@@ -1,13 +1,7 @@
-## Running React on Repl.it
+## Starting app
+1. Make sure to update 'API_BASE_URL' in 'constants.js' with the base url for the backend (e.g. http://127.0.0.1:5000)
+2. run 'npm install' in application root directory
+3. run 'npm run dev' in application root directory
 
-[React](https://reactjs.org/) is a popular JavaScript library for building user interfaces.
-
-[Vite](https://vitejs.dev/) is a blazing fast frontend build tool that includes features like Hot Module Reloading (HMR), optimized builds, and TypeScript support out of the box.
-
-Using the two in conjunction is one of the fastest ways to build a web app.
-
-### Getting Started
-- Hit run
-- Edit [App.jsx](#src/App.jsx) and watch it live update!
-
-By default, Replit runs the `dev` script, but you can configure it by changing the `run` field in the `.replit` file.
+## Repl.it
+https://replit.com/@gundadittu/image-upload-front-end?v=1

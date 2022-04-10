@@ -3,6 +3,10 @@ import { Col, Row, Divider, Image, Empty } from 'antd';
 import { API_BASE_URL } from '../constants';
 
 function SubmissionGallery(props) {
+  const truncateString = (str, n) => {
+    return ((str.length > n) ? str.substr(0, n-1) + '&hellip;' : str);
+  };
+  
   useEffect(() => {
     props.fetchUploadedImages();
   }, []);
@@ -10,7 +14,7 @@ function SubmissionGallery(props) {
   if (props.submissions.length == 0) {
     return (
       <Empty description={"Your uploaded images will show here."}/>
-    )
+    );
   }
 
   const imageDivStyle = {
@@ -27,7 +31,7 @@ function SubmissionGallery(props) {
   
   return (props.submissions.map((sub) => (
       <>
-        <Divider orientation="left">{sub.title}</Divider>
+        <Divider orientation="left">{truncateString(sub.title, 20)}</Divider>
         <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
           <Col className="gutter-row" span={12}>
             <div style={imageDivStyle}>
@@ -41,8 +45,8 @@ function SubmissionGallery(props) {
             <div style={imageDivStyle}>
               <Image
                 style={imageStyle}
-                src={API_BASE_URL+sub.rotatedImagePath}/>
-              <p>Rotated Image</p>
+                src={API_BASE_URL+sub.facesImagePath}/>
+              <p>Image with Faces Annotated</p>
             </div>
           </Col>
         </Row>

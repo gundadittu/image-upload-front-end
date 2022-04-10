@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Button, Upload, message } from 'antd';
+import { Button, Upload, message } from 'antd';
 import { FileImageOutlined } from '@ant-design/icons';
 import base64 from 'base-64';
 import { API_BASE_URL } from '../constants';
@@ -10,14 +10,14 @@ function ImageUpload(props) {
   
   const submitForm = () => {
     if (selectedFile == null) {
-      message.error("Please add one image before uploading.")
-      return
+      message.error("Please add one image before uploading.");
+      return;
     }
     const formData = new FormData();
-    formData.append("image", selectedFile.originFileObj)
+    formData.append("image", selectedFile.originFileObj);
     
     let headers = new Headers();
-    headers.set('Authorization', 'Basic ' + base64.encode(props.auth.username + ":" + props.auth.password));
+    headers.set('Authorization', 'Basic '+base64.encode(props.auth.username+":"+props.auth.password));
     
     const closeLoadingMessage = message.loading("Uploading image...", 0);
     fetch(API_BASE_URL+'/api/submissions/create', {
@@ -29,7 +29,7 @@ function ImageUpload(props) {
     .then(json => {
       const error = json.error;
       if (error != null) {
-        throw Error(json.message)
+        throw Error(json.message);
       }
       closeLoadingMessage();
       setSelectedFile(null);
@@ -38,7 +38,7 @@ function ImageUpload(props) {
       props.fetchUploadedImages(false);
     })
     .catch((e) => {
-      console.error(e.message)
+      console.error(e.message);
       closeLoadingMessage();
       message.error(e.message);
     });
@@ -48,7 +48,7 @@ function ImageUpload(props) {
     const fileUid = file.uid;
     const selectedFileList = fileList.filter(x => x.uid == fileUid);
     setSelectedFile(selectedFileList.length > 0 ? selectedFileList[0] : null);
-  }
+  };
   
   const centeredStyle = {
     display: 'flex',

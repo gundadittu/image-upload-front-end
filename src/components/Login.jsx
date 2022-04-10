@@ -6,13 +6,13 @@ function Login(props) {
 
   const [showLoginForm, setShowLoginForm] = useState(false);
 
-  const executeAuthCall = (loginCall, values) => {
+  const executeAuthCall = (isLoginCall, values) => {
     const formData = new FormData();
     formData.append("username", values.username);
     formData.append("password", values.password);
 
-    const closeLoadingMessage = message.loading(loginCall ? "Logging you in..." : "Signing up...", 0);
-    fetch(API_BASE_URL+(loginCall ? '/api/users/login' : '/api/users/signup'), {
+    const closeLoadingMessage = message.loading(isLoginCall ? "Logging you in..." : "Signing up...", 0);
+    fetch(API_BASE_URL+(isLoginCall ? '/api/users/login' : '/api/users/signup'), {
       method: 'POST',
       body: formData
     })
@@ -30,15 +30,9 @@ function Login(props) {
       closeLoadingMessage();
       message.error(e.message);
     });
-  }
-  
-  const submitLoginForm = (values) => {
-    executeAuthCall(true, values);
-  }
-
-  const submitSignupForm = (values) => {
-    executeAuthCall(false, values);
-  }
+  };
+  const submitLoginForm = (values) => executeAuthCall(true, values);
+  const submitSignupForm = (values) => executeAuthCall(false, values);
 
   const centeredStyle = {
     display: 'flex',
